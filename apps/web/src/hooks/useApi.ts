@@ -50,3 +50,21 @@ export const useCloseDay = () => {
 }
 
 export const usePurchases = () => useQuery({ queryKey: ['purchases'], queryFn: () => api.get('/purchases/purchases/').then(r => r.data) })
+
+export const useCreateOrderFull = () => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => api.post('/sales/orders/', data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['orders'] })
+  })
+}
+
+export const usePayOrder = () => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: any) => api.post(`/sales/orders/${id}/pay/`, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['orders'] })
+  })
+}
+
+export const useUsers = () => useQuery({ queryKey: ['users'], queryFn: () => api.get('/users/users/').then(r => r.data) })

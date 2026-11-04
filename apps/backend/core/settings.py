@@ -120,3 +120,5 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+MIDDLEWARE.append('core.middleware.LicenseMiddleware')

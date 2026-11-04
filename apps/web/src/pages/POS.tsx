@@ -20,7 +20,6 @@ export default function POS() {
   
   const categories = categoriesData?.results || categoriesData || []
   const items = itemsData?.results || itemsData || []
-  const filteredItems = items
 
   const total = items.reduce((sum: number, i: any) => sum + Number(i.price) * Number(i.qty), 0)
 
@@ -30,7 +29,7 @@ export default function POS() {
         <h1 className="text-xl font-bold">POS</h1>
         <div className="flex gap-2">
           <Link to="/tables" className="px-3 py-1 bg-gray-200 rounded text-sm">Tables</Link>
-          <button onClick={() => setShowHold(true)} className="px-3 py-1 bg-gray-200 rounded text-sm">Hold Orders</button>
+          <button onClick={() => setShowHold(true)} className="px-3 py-1 bg-gray-200 rounded text-sm">Hold</button>
           <Link to="/kds" className="px-3 py-1 bg-gray-200 rounded text-sm">KDS</Link>
           <Link to="/daily/opening" className="px-3 py-1 bg-gray-200 rounded text-sm">Daily</Link>
           <Link to="/admin" className="px-3 py-1 bg-gray-200 rounded text-sm">Admin</Link>
@@ -40,7 +39,7 @@ export default function POS() {
         <div className="col-span-2 bg-white rounded shadow p-4 overflow-auto">
           <OrderTypeTabs value={orderType} onChange={setOrderType} />
           <CategoryTabs categories={categories} active={activeCategory} onChange={setActiveCategory} />
-          <ItemGrid items={filteredItems} onAdd={(item: any) => addItem(item)} />
+          <ItemGrid items={items} onAdd={(item: any) => addItem(item)} />
         </div>
         <div className="bg-white rounded shadow p-4 flex flex-col">
           <div className="flex justify-between mb-3">
@@ -58,7 +57,7 @@ export default function POS() {
                       <div className="font-medium">{item.name}</div>
                       <div className="text-sm text-gray-600">{item.price} x {item.qty}</div>
                     </div>
-                    <button onClick={() => removeItem(idx)} className="text-red-600">Remove</button>
+                    <button onClick={() => removeItem(idx)} className="text-red-600 text-sm">Remove</button>
                   </div>
                 ))}
               </div>
@@ -66,12 +65,12 @@ export default function POS() {
           </div>
           <div className="border-t pt-3">
             <div className="flex justify-between font-bold mb-2"><span>Total</span><span>{total} MMK</span></div>
-            <button onClick={() => setShowPay(true)} disabled={items.length === 0} className="w-full bg-green-600 text-white py-2 rounded disabled:bg-gray-400">PAY</button>
+            <button onClick={() => setShowPay(true)} disabled={items.length === 0} className="w-full bg-green-600 text-white py-2 rounded disabled:bg-gray-400">Payment</button>
             <button onClick={clear} className="w-full mt-2 bg-gray-200 py-2 rounded">Clear</button>
           </div>
         </div>
       </div>
-      <PaymentModal open={showPay} total={total} onClose={() => setShowPay(false)} />
+      <PaymentModal open={showPay} total={total} orderType={orderType} onClose={() => setShowPay(false)} />
       <HoldListModal open={showHold} onClose={() => setShowHold(false)} />
     </div>
   )
