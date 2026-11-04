@@ -32,3 +32,9 @@ docker-compose exec backend python manage.py createsuperuser
 - KDS Realtime
 - Custom React Admin (replaces Django admin)
 - Multi-tenant SaaS + Standalone with license/subscription
+
+## Platforms
+- Web: http://localhost:5173
+- Desktop: Electron app (apps/desktop) - opens web POS
+- Mobile: Expo app (apps/mobile) - iOS/Android
+- Tablet: Responsive web app works on tablets

@@ -16,3 +16,15 @@
 - Reports P&L with COGS estimate
 - Daily close with reconciliation submit
 - Permissions middleware placeholder enhanced
+
+- Mobile app scaffold (Expo/React Native)
+- Desktop app scaffold (Electron)
+- Tablet responsive support
+- Seed command added
+- Migration check command added
+
+- Mobile app scaffold (Expo/React Native) for POS/KDS/Tables
+- Desktop app scaffold (Electron)
+- Tablet responsive meta tags
+- Seed command in tenants app
+- Migration check command
