@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'reports',
     'billing',
     'kds',
+    'daily',
 ]
 
 MIDDLEWARE = [
