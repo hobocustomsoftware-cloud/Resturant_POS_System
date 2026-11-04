@@ -1,16 +1,20 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 const path = require('path')
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width: 1400,
+    height: 900,
+    minWidth: 1024,
+    minHeight: 768,
+    title: 'Restaurant POS',
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true
     }
   })
-  win.loadURL('http://localhost:5173/pos')
+  Menu.setApplicationMenu(null)
+  win.loadURL(process.env.POS_URL || 'http://localhost:5173/pos')
 }
 
 app.whenReady().then(createWindow)
