@@ -1,0 +1,5 @@
+Place app assets here:
+- icon.png
+- splash.png
+- adaptive-icon.png
+- favicon.png
