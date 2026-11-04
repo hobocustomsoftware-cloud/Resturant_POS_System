@@ -39,3 +39,17 @@ services:
 volumes:
   pg_data:
   redis_data:
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend

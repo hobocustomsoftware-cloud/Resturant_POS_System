@@ -29,3 +29,19 @@ Admin: http://localhost:8000/admin
 - Backend: Django 5 + DRF + PostgreSQL + Redis + Channels
 - Frontend: Next.js (to be added)
 - Deployment: Docker
+
+## Frontend (React + Vite)
+```bash
+cd apps/web
+npm install
+npm run dev
+```
+App: http://localhost:5173
+
+## Features
+- UTA-style POS
+- Custom React Admin (replacing Django admin)
+- Daily Opening/Purchases/Close Shop with stock reconciliation
+- Detailed Expenses (Bar, Kitchen & BBQ)
+- Daily & Monthly Reports with P&L
+- Multi-branch, Multi-tenant (SaaS/Standalone)
