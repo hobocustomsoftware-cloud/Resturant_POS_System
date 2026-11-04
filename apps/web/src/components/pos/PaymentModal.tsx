@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCreateOrderFull, useCompleteOrder } from '@/hooks/useApi'
+import { useCreateOrderFull, useCompleteOrder, useCreateOrderItem } from '@/hooks/useApi'
 import { useCartStore } from '@/stores/cart'
 import toast from 'react-hot-toast'
 
@@ -8,6 +8,7 @@ export default function PaymentModal({ open, total, onClose, orderType }: any) {
   const [discount, setDiscount] = useState(0)
   const [received, setReceived] = useState('')
   const createOrder = useCreateOrderFull()
+  const addItems = useCreateOrderItem()
   const completeOrder = useCompleteOrder()
   const { items, clear } = useCartStore()
 
@@ -28,6 +29,8 @@ export default function PaymentModal({ open, total, onClose, orderType }: any) {
         total: finalTotal,
         status: 'pending'
       })
+      const orderItems = items.map((i: any) => ({ item_id: i.id, qty: i.qty, price: i.price }))
+      await addItems.mutateAsync({ orderId: orderRes.data.id, items: orderItems })
       await completeOrder.mutateAsync(orderRes.data.id)
       toast.success('Order completed')
       clear()
@@ -61,7 +64,7 @@ export default function PaymentModal({ open, total, onClose, orderType }: any) {
           </div>
         )}
         <div className="flex gap-2">
-          <button onClick={handlePay} disabled={createOrder.isPending || completeOrder.isPending} className="flex-1 bg-green-600 text-white py-2 rounded disabled:bg-gray-400">Complete Payment</button>
+          <button onClick={handlePay} disabled={createOrder.isPending} className="flex-1 bg-green-600 text-white py-2 rounded disabled:bg-gray-400">Complete Payment</button>
           <button onClick={onClose} className="flex-1 bg-gray-200 py-2 rounded">Cancel</button>
         </div>
       </div>

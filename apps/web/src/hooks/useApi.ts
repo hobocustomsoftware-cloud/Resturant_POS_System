@@ -68,3 +68,11 @@ export const usePayOrder = () => {
 }
 
 export const useUsers = () => useQuery({ queryKey: ['users'], queryFn: () => api.get('/users/users/').then(r => r.data) })
+
+export const useCreateOrderItem = () => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ orderId, items }: any) => api.post(`/sales/orders/${orderId}/add_items/`, { items }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['orders'] })
+  })
+}

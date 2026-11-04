@@ -10,3 +10,9 @@
 - Receipt: HTML/ESC-POS ready template
 - License middleware added
 - API hooks expanded
+
+- Order items create via add_items, complete flow fixed
+- KDS websocket routing/consumer
+- Reports P&L with COGS estimate
+- Daily close with reconciliation submit
+- Permissions middleware placeholder enhanced

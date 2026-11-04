@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum
-from sales.models import Order
+from sales.models import Order, OrderItem
 from expenses.models import Expense
 from purchases.models import Purchase
 from decimal import Decimal
@@ -14,10 +14,10 @@ class DailySummaryView(APIView):
     def get(self, request):
         tenant = getattr(request, 'tenant', None) or request.user.tenant
         date = request.query_params.get('date')
-        orders = Order.objects.filter(tenant=tenant)
+        orders = Order.objects.filter(tenant=tenant, status='completed')
         if date:
             orders = orders.filter(created_at__date=date)
-        sales_total = orders.filter(status='completed').aggregate(s=Sum('total'))['s'] or Decimal(0)
+        sales_total = orders.aggregate(s=Sum('total'))['s'] or Decimal(0)
         expenses = Expense.objects.filter(tenant=tenant)
         if date:
             expenses = expenses.filter(date__date=date)
@@ -49,8 +49,12 @@ class PnLView(APIView):
         if date:
             expenses = expenses.filter(date__date=date)
         exp_total = expenses.aggregate(s=Sum('amount'))['s'] or Decimal(0)
+        # Simple COGS estimate
+        cogs = revenue * Decimal('0.6')
         return Response({
             'revenue': float(revenue),
+            'cogs': float(cogs),
+            'gross_profit': float(revenue - cogs),
             'expenses': float(exp_total),
-            'profit': float(revenue - exp_total)
+            'profit': float(revenue - cogs - exp_total)
         })

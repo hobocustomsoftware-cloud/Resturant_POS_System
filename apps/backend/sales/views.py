@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from core.mixins import TenantMixin
 from core.permissions import IsTenantMember
 from django.db import transaction
-from .models import Branch, Table, Order
+from .models import Branch, Table, Order, OrderItem
 from .serializers import BranchSerializer, TableSerializer, OrderSerializer
 from inventory.models import Stock, StockMovement
+from catalog.models import Item
 
 
 class BranchViewSet(TenantMixin, viewsets.ModelViewSet):
@@ -26,6 +27,31 @@ class OrderViewSet(TenantMixin, viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsTenantMember]
     filterset_fields = ['status', 'type', 'branch']
+
+    def perform_create(self, serializer):
+        tenant = getattr(self.request, 'tenant', None) or self.request.user.tenant
+        branch = self.request.data.get('branch') or getattr(self.request.user, 'branch_id')
+        if branch and isinstance(branch, str):
+            pass
+        order_no = self.request.data.get('order_no') or f'ORD-{Order.objects.count()+1:06d}'
+        serializer.save(tenant=tenant, user=self.request.user, order_no=order_no, branch_id=branch)
+
+    @action(detail=True, methods=['post'])
+    @transaction.atomic
+    def add_items(self, request, pk=None):
+        order = self.get_object()
+        items = request.data.get('items', [])
+        for it in items:
+            item = Item.objects.get(id=it['item_id'])
+            OrderItem.objects.create(
+                order=order,
+                item=item,
+                quantity=it.get('qty', 1),
+                unit_id=it.get('unit_id'),
+                price=it.get('price', item.price),
+                total=it.get('price', item.price) * it.get('qty', 1)
+            )
+        return Response({'detail': 'Items added'})
 
     @action(detail=True, methods=['post'])
     @transaction.atomic
@@ -89,3 +115,10 @@ class OrderViewSet(TenantMixin, viewsets.ModelViewSet):
             except Exception:
                 pass
         return Response({'detail': 'Order completed', 'status': order.status})
+
+    @action(detail=True, methods=['post'])
+    def pay(self, request, pk=None):
+        order = self.get_object()
+        order.status = 'paid'
+        order.save()
+        return Response({'detail': 'Payment recorded', 'order_id': order.id})

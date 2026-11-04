@@ -8,11 +8,24 @@ export default function DailyClose() {
   const closeDay = useCloseDay()
   const stock = stockData?.results || stockData || []
   const [cashCount, setCashCount] = useState('')
+  const [recons, setRecons] = useState<any>({})
+
+  const handleChange = (id: string, field: string, value: any) => {
+    setRecons({ ...recons, [id]: { ...recons[id], [field]: value } })
+  }
 
   const handleClose = () => {
     if (!current?.session?.id) return toast.error('No open session')
-    closeDay.mutate(current.session.id, {
-      onSuccess: () => toast.success('Day closed'),
+    const reconciliations = stock.map((s: any) => ({
+      item_id: s.item,
+      item_name: s.item,
+      system_qty: s.quantity,
+      actual_qty: recons[s.id]?.actual_qty || s.quantity,
+      difference: Number(recons[s.id]?.actual_qty || s.quantity) - Number(s.quantity),
+      reason: recons[s.id]?.reason || ''
+    }))
+    closeDay.mutate({ id: current.session.id, data: { reconciliations, cash_count: cashCount } } as any, {
+      onSuccess: () => toast.success('Day closed with reconciliation'),
       onError: () => toast.error('Failed to close')
     })
   }
@@ -46,13 +59,13 @@ export default function DailyClose() {
             </tr>
           </thead>
           <tbody>
-            {stock.map((s: any, idx: number) => (
-              <tr key={idx} className="border-b">
+            {stock.map((s: any) => (
+              <tr key={s.id} className="border-b">
                 <td className="p-2">{s.item}</td>
                 <td className="p-2">{s.quantity}</td>
-                <td className="p-2"><input className="border p-1 rounded w-24" /></td>
+                <td className="p-2"><input onChange={(e) => handleChange(s.id, 'actual_qty', e.target.value)} className="border p-1 rounded w-24" /></td>
                 <td className="p-2">-</td>
-                <td className="p-2"><input className="border p-1 rounded w-full" placeholder="Reason if different" /></td>
+                <td className="p-2"><input onChange={(e) => handleChange(s.id, 'reason', e.target.value)} className="border p-1 rounded w-full" placeholder="Reason if different" /></td>
               </tr>
             ))}
           </tbody>

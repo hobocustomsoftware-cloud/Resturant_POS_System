@@ -15,7 +15,7 @@ class DaySessionViewSet(TenantMixin, viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def current(self, request):
-        tenant = getattr(request, 'tenant', None) or request.user.tenant
+        tenant = getattr(request, 'tenant', None) or getattr(request.user, 'tenant', None)
         today = timezone.now().date()
         session = DaySession.objects.filter(tenant=tenant, date=today, status='open').first()
         if not session:
@@ -24,7 +24,7 @@ class DaySessionViewSet(TenantMixin, viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def open(self, request):
-        tenant = getattr(request, 'tenant', None) or request.user.tenant
+        tenant = getattr(request, 'tenant', None) or getattr(request.user, 'tenant', None)
         branch_id = request.data.get('branch')
         opening_cash = request.data.get('opening_cash', 0)
         today = timezone.now().date()
@@ -43,6 +43,20 @@ class DaySessionViewSet(TenantMixin, viewsets.ModelViewSet):
         session.closed_by = request.user
         session.closed_at = timezone.now()
         session.save()
+        # Save reconciliations if provided
+        items = request.data.get('reconciliations', [])
+        for it in items:
+            StockReconciliation.objects.create(
+                day_session=session,
+                tenant=session.tenant,
+                branch=session.branch,
+                item_id=str(it.get('item_id', '')),
+                item_name=it.get('item_name', ''),
+                system_qty=it.get('system_qty', 0),
+                actual_qty=it.get('actual_qty', 0),
+                difference=it.get('difference', 0),
+                reason=it.get('reason', '')
+            )
         return Response(DaySessionSerializer(session).data)
 
 

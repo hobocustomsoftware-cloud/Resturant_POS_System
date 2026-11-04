@@ -30,9 +30,8 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
-    payments = PaymentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
         fields = '__all__'
-        read_only_fields = ['tenant']
+        read_only_fields = ['tenant', 'user', 'order_no', 'branch']
