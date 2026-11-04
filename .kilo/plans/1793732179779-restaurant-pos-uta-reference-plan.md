@@ -1,30 +1,29 @@
-# Restaurant POS - UTA Style Implementation Plan
+# Restaurant POS - UTA Style Comparison & Planning
 
-Reference: https://pos.hobocustomsoftware.com
+Reference: https://pos.hobocustomsoftware.com (UTA POS)
 
 ## Goal
-Build Restaurant POS inspired by UTA POS. Support both Standalone and Multi-Tenant SaaS (configurable), Docker deployable, with subscription/license key monetization. Complete the existing Django scaffold.
+Compare with UTA POS and align our implementation to match its workflow/UI.
 
-## Decisions
-- Frontend: API-first complete, then Next.js UI
-- Receipt: HTML + ESC/POS ready
-- Currency: MMK
-- License: offline signed JWT
-- Deploy: Docker
+## Key Areas to Review
+1. **POS Screen** - Layout, categories, items, cart, order type, table selection
+2. **Order Management** - Hold/Resume, order list, status
+3. **Table Management** - Visual layout
+4. **Payment** - Methods, split payment, discount
+5. **Kitchen Display** - Queue by status
+6. **Daily Operations** - Opening, purchases, close shop
+7. **Reports** - Daily/Monthly, P&L
+8. **Admin/Settings** - Products, categories, users, roles, expenses
 
 ## Current State
-Scaffold exists (models/core/middleware). Missing: serializers/views/urls/permissions, auth, business logic, migrations, reports, billing enforcement, KDS.
+We have scaffold ready. Need detailed comparison.
 
-## Phases
-1. Core Infra (permissions, utils, mixins, middleware)
-2. Migrations & Seeds
-3. Auth & Users/Roles
-4. Catalog
-5. Purchases & Inventory (stock movements)
-6. Sales/POS (tables, orders, payments, stock deduction incl combos)
-7. Expenses/Reports/Billing/License (P&L with COGS)
-8. KDS (Channels)
-9. Frontend scaffold
+## Questions
+1. Which UTA features are must-have?
+2. UI layout preferences (exact match vs similar)?
+3. Receipt format (thermal)?
+4. Payment flow details?
+5. Daily close process specifics?
 
-## Next Action
-Implementation required. Switch to implementation agent.
+## Approach
+Review UTA UI structure, identify gaps, update plan and implement.

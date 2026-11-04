@@ -1,26 +1,45 @@
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
+import Sidebar from '@/components/admin/Sidebar'
 
-const AdminHome = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold mb-4">Custom Admin Panel</h1>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <Link to="/admin/products" className="p-4 border rounded hover:bg-gray-50">Products</Link>
-      <Link to="/admin/categories" className="p-4 border rounded hover:bg-gray-50">Categories</Link>
-      <Link to="/admin/purchases" className="p-4 border rounded hover:bg-gray-50">Purchases</Link>
-      <Link to="/admin/sales" className="p-4 border rounded hover:bg-gray-50">Sales</Link>
-      <Link to="/admin/expenses" className="p-4 border rounded hover:bg-gray-50">Expenses (Bar/Kitchen/BBQ)</Link>
-      <Link to="/admin/stock" className="p-4 border rounded hover:bg-gray-50">Stock</Link>
-      <Link to="/admin/users" className="p-4 border rounded hover:bg-gray-50">Users/Roles</Link>
-      <Link to="/admin/reports" className="p-4 border rounded hover:bg-gray-50">Reports</Link>
+const Dashboard = () => (
+  <div>
+    <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+    <div className="grid grid-cols-4 gap-4">
+      <div className="p-4 bg-white rounded shadow">Sales Today</div>
+      <div className="p-4 bg-white rounded shadow">Purchases</div>
+      <div className="p-4 bg-white rounded shadow">Expenses</div>
+      <div className="p-4 bg-white rounded shadow">Stock Alerts</div>
     </div>
+  </div>
+)
+
+const CRUDPage = ({ title }: { title: string }) => (
+  <div>
+    <h1 className="text-2xl font-bold mb-4">{title}</h1>
+    <button className="mb-4 px-4 py-2 bg-blue-600 text-white rounded">Add New</button>
+    <div className="bg-white rounded shadow p-4">List will be here</div>
   </div>
 )
 
 export default function Admin() {
   return (
-    <Routes>
-      <Route index element={<AdminHome />} />
-      <Route path="*" element={<AdminHome />} />
-    </Routes>
+    <div className="flex">
+      <Sidebar />
+      <main className="flex-1 p-6 bg-gray-100 min-h-screen">
+        <Routes>
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<CRUDPage title="Products/Items" />} />
+          <Route path="categories" element={<CRUDPage title="Categories" />} />
+          <Route path="purchases" element={<CRUDPage title="Purchases/GRN" />} />
+          <Route path="sales" element={<CRUDPage title="Sales/Orders" />} />
+          <Route path="expenses" element={<CRUDPage title="Expenses - Bar/Kitchen/BBQ/General" />} />
+          <Route path="stock" element={<CRUDPage title="Stock/Inventory" />} />
+          <Route path="tables" element={<CRUDPage title="Tables" />} />
+          <Route path="users" element={<CRUDPage title="Users & Roles" />} />
+          <Route path="settings" element={<CRUDPage title="Settings" />} />
+          <Route path="reports" element={<CRUDPage title="Reports" />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
