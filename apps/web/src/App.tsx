@@ -21,9 +21,12 @@ function App() {
       <Route path="/daily/close" element={<DailyClose />} />
       <Route path="/reports/daily" element={<ReportsDaily />} />
       <Route path="/reports/monthly" element={<ReportsMonthly />} />
+      <Route path="/tables" element={<Tables />} />
       <Route path="/" element={<Navigate to="/pos" replace />} />
     </Routes>
   )
 }
 
 export default App
+
+import Tables from './pages/Tables'
