@@ -1,21 +1,35 @@
+import { useStock, useDailyCurrent, useCloseDay } from '@/hooks/useApi'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+
 export default function DailyClose() {
-  const items = [
-    { name: 'Fried Rice', system: 50, actual: '', diff: 0 },
-    { name: 'Coke', system: 100, actual: '', diff: 0 },
-  ]
+  const { data: stockData } = useStock()
+  const { data: current } = useDailyCurrent()
+  const closeDay = useCloseDay()
+  const stock = stockData?.results || stockData || []
+  const [cashCount, setCashCount] = useState('')
+
+  const handleClose = () => {
+    if (!current?.session?.id) return toast.error('No open session')
+    closeDay.mutate(current.session.id, {
+      onSuccess: () => toast.success('Day closed'),
+      onError: () => toast.error('Failed to close')
+    })
+  }
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Close Shop - Stock Reconciliation</h1>
       <div className="bg-white rounded shadow p-6 mb-4">
         <h2 className="font-bold mb-3">Cash Count</h2>
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block mb-1">System Cash</label>
-            <input disabled className="w-full border p-2 rounded bg-gray-100" value="50000" />
+            <input disabled className="w-full border p-2 rounded bg-gray-100" value="0" />
           </div>
           <div>
             <label className="block mb-1">Actual Cash Count</label>
-            <input className="w-full border p-2 rounded" placeholder="Enter actual cash" />
+            <input value={cashCount} onChange={(e) => setCashCount(e.target.value)} className="w-full border p-2 rounded" placeholder="Enter actual cash" />
           </div>
         </div>
       </div>
@@ -32,19 +46,21 @@ export default function DailyClose() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, idx) => (
+            {stock.map((s: any, idx: number) => (
               <tr key={idx} className="border-b">
-                <td className="p-2">{item.name}</td>
-                <td className="p-2">{item.system}</td>
+                <td className="p-2">{s.item}</td>
+                <td className="p-2">{s.quantity}</td>
                 <td className="p-2"><input className="border p-1 rounded w-24" /></td>
-                <td className="p-2">0</td>
+                <td className="p-2">-</td>
                 <td className="p-2"><input className="border p-1 rounded w-full" placeholder="Reason if different" /></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <button className="bg-red-600 text-white px-6 py-2 rounded">Close Shop</button>
+      <button onClick={handleClose} disabled={closeDay.isPending} className="bg-red-600 text-white px-6 py-2 rounded disabled:bg-gray-400">
+        {closeDay.isPending ? 'Closing...' : 'Close Shop'}
+      </button>
     </div>
   )
 }

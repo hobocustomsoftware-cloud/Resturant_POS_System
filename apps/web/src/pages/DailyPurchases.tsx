@@ -1,18 +1,48 @@
+import { usePurchases, useReceivePurchase } from '@/hooks/useApi'
+import toast from 'react-hot-toast'
+
 export default function DailyPurchases() {
+  const { data: purchasesData } = usePurchases?.() || { data: null }
+  const receive = useReceivePurchase()
+  const purchases = purchasesData?.results || purchasesData || []
+
+  const handleReceive = (id: string) => {
+    receive.mutate(id, {
+      onSuccess: () => toast.success('Purchase received - stock updated'),
+      onError: () => toast.error('Failed')
+    })
+  }
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Daily Purchases (GRN)</h1>
-      <div className="bg-white rounded shadow p-6 mb-4">
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <input className="border p-2 rounded" placeholder="Supplier" />
-          <input className="border p-2 rounded" placeholder="Invoice No" />
-          <input type="date" className="border p-2 rounded" />
-        </div>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded mb-4">Add Item</button>
-        <div className="border rounded p-4 text-gray-600 text-center">Add purchase items here</div>
-        <div className="mt-4 flex justify-end">
-          <button className="bg-green-600 text-white px-6 py-2 rounded">Save & Receive (Add to Stock)</button>
-        </div>
+      <div className="bg-white rounded shadow overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="text-left p-3">Invoice</th>
+              <th className="text-left p-3">Supplier</th>
+              <th className="text-left p-3">Total</th>
+              <th className="text-left p-3">Status</th>
+              <th className="text-left p-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {purchases.map((p: any) => (
+              <tr key={p.id} className="border-t">
+                <td className="p-3">{p.invoice_no}</td>
+                <td className="p-3">{p.supplier}</td>
+                <td className="p-3">{p.total}</td>
+                <td className="p-3">{p.status}</td>
+                <td className="p-3">
+                  {p.status !== 'received' && (
+                    <button onClick={() => handleReceive(p.id)} className="px-3 py-1 bg-green-600 text-white rounded text-sm">Receive & Add to Stock</button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )
