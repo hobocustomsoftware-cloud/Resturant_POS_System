@@ -1,0 +1,68 @@
+<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="900" fill="#ffffff"/>
+  
+  <text x="700" y="50" font-size="32" font-weight="bold" text-anchor="middle" fill="#1a1a1a">Restaurant POS System - Architecture Flow</text>
+  
+  <!-- Client Apps -->
+  <rect x="100" y="100" width="300" height="80" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="250" y="135" font-size="16" font-weight="bold" text-anchor="middle">Web App</text>
+  <text x="250" y="155" font-size="12" text-anchor="middle">React + Vite + TypeScript</text>
+  
+  <rect x="550" y="100" width="300" height="80" rx="10" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="700" y="135" font-size="16" font-weight="bold" text-anchor="middle">Mobile App</text>
+  <text x="700" y="155" font-size="12" text-anchor="middle">React Native + Expo</text>
+  
+  <rect x="1000" y="100" width="300" height="80" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+  <text x="1150" y="135" font-size="16" font-weight="bold" text-anchor="middle">Desktop App</text>
+  <text x="1150" y="155" font-size="12" text-anchor="middle">Electron + Native GUI</text>
+  
+  <!-- Backend -->
+  <rect x="500" y="300" width="400" height="100" rx="10" fill="#fff3e0" stroke="#f57c00" stroke-width="2"/>
+  <text x="700" y="345" font-size="18" font-weight="bold" text-anchor="middle">Django REST API</text>
+  <text x="700" y="370" font-size="12" text-anchor="middle">JWT Auth • Multi-tenant • Business Logic</text>
+  
+  <rect x="950" y="300" width="250" height="100" rx="10" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+  <text x="1075" y="345" font-size="16" font-weight="bold" text-anchor="middle">WebSocket</text>
+  <text x="1075" y="370" font-size="12" text-anchor="middle">Django Channels</text>
+  
+  <!-- Data -->
+  <rect x="200" y="500" width="250" height="80" rx="10" fill="#efebe9" stroke="#6d4c41" stroke-width="2"/>
+  <text x="325" y="545" font-size="14" font-weight="bold" text-anchor="middle">PostgreSQL</text>
+  
+  <rect x="575" y="500" width="250" height="80" rx="10" fill="#ffcdd2" stroke="#d32f2f" stroke-width="2"/>
+  <text x="700" y="545" font-size="14" font-weight="bold" text-anchor="middle">Redis Cache</text>
+  
+  <rect x="950" y="500" width="250" height="80" rx="10" fill="#e0f2f1" stroke="#00796b" stroke-width="2"/>
+  <text x="1075" y="545" font-size="14" font-weight="bold" text-anchor="middle">Media Storage</text>
+  
+  <!-- Features -->
+  <rect x="100" y="700" width="200" height="60" rx="8" fill="#f1f8e9" stroke="#689f38"/>
+  <text x="200" y="735" font-size="12" text-anchor="middle">POS & Orders</text>
+  
+  <rect x="350" y="700" width="200" height="60" rx="8" fill="#f1f8e9" stroke="#689f38"/>
+  <text x="450" y="735" font-size="12" text-anchor="middle">Kitchen Display (KDS)</text>
+  
+  <rect x="600" y="700" width="200" height="60" rx="8" fill="#f1f8e9" stroke="#689f38"/>
+  <text x="700" y="735" font-size="12" text-anchor="middle">Inventory & Purchases</text>
+  
+  <rect x="850" y="700" width="200" height="60" rx="8" fill="#f1f8e9" stroke="#689f38"/>
+  <text x="950" y="735" font-size="12" text-anchor="middle">Billing & Trial (37 days)</text>
+  
+  <rect x="1100" y="700" width="200" height="60" rx="8" fill="#f1f8e9" stroke="#689f38"/>
+  <text x="1200" y="735" font-size="12" text-anchor="middle">Reports & Analytics</text>
+  
+  <!-- Arrows -->
+  <line x1="250" y1="180" x2="600" y2="300" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="700" y1="180" x2="700" y2="300" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="1150" y1="180" x2="800" y2="300" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="600" y1="400" x2="400" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="700" y1="400" x2="700" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="800" y1="400" x2="1000" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="950" y1="400" x2="1075" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#666" />
+    </marker>
+  </defs>
+</svg>
