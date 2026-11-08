@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'billing',
     'kds',
     'daily',
+    'notifications',
+    'backup',
 ]
 
 MIDDLEWARE = [

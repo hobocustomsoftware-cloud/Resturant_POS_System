@@ -36,10 +36,6 @@ services:
       - db
       - redis
 
-volumes:
-  pg_data:
-  redis_data:
-
   web:
     build:
       context: .
@@ -62,3 +58,7 @@ volumes:
     command: sh -c "echo 'Mobile app ready'"
     profiles:
       - mobile
+
+volumes:
+  pg_data:
+  redis_data:
