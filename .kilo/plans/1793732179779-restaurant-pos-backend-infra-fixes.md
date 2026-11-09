@@ -9,10 +9,10 @@ Make the Django backend runnable by registering missing apps, fixing broken URL 
 - `docker-compose.yml:39-64` — `web` and `mobile` services are nested **under `volumes`**, which is invalid Compose schema. Also has obsolete `version` field.
 - `apps/backend/core/asgi.py:10-18` — Only includes `kds.routing`; missing `notifications.routing` for `ws/notifications/`.
 - `apps/backend/notifications/migrations/` has no migration files (only `__init__.py`).
-- `apps/backend/backup/migrations/` has no migration files (only `__init__.py`).
+- `apps/backend/backup/migrations/` has no migration files (only `init__.py`).
 - `apps/backend/requirements.txt` uses `psycopg2-binary==2.9.9` (prebuilt, no build deps needed).
-- `docker/Dockerfile.backend` uses ECR mirror but does `apt-get update` which fails reaching Debian mirrors (exit code 100) due to network/DNS issues.
-- `docker/Dockerfile.web` uses ECR mirror base image.
+- `docker/Dockerfile.backend` — Simplified to remove apt deps (psycopg2-binary is prebuilt). Uses ECR mirror.
+- `docker/Dockerfile.web` — Uses ECR mirror base image.
 
 ## Decisions
 1. Add `'notifications'` and `'backup'` to `INSTALLED_APPS` after `'daily'` in `settings.py`.
@@ -21,7 +21,7 @@ Make the Django backend runnable by registering missing apps, fixing broken URL 
 4. Update `asgi.py` to import `notifications.routing` and combine websocket URL patterns: `kds.routing.websocket_urlpatterns + notifications.routing.websocket_urlpatterns`.
 5. Create `0001_initial.py` migrations for `notifications` and `backup` apps.
 6. Switch base images to AWS ECR Public mirrors.
-7. Simplify `Dockerfile.backend` - with `psycopg2-binary` we don't need build-essential/libpq-dev; use archive.debian.org mirrors with proper configuration or skip apt if possible. Only install ca-certificates if needed.
+7. Simplify `Dockerfile.backend` - with `psycopg2-binary` we don't need build-essential/libpq-dev; just install pip packages.
 8. Keep `env_file: ./apps/backend/.env.example` as-is; note `.env` may need creation for local runs.
 
 ## Ordered tasks
@@ -31,7 +31,7 @@ Make the Django backend runnable by registering missing apps, fixing broken URL 
 4. Edit `apps/backend/core/asgi.py` — import `notifications.routing` and combine URL patterns.
 5. Create `apps/backend/notifications/migrations/0001_initial.py` for `DeviceToken` and `Notification` models.
 6. Create `apps/backend/backup/migrations/0001_initial.py` for `BackupPlan` and `TenantBackup` models.
-7. Edit `docker/Dockerfile.backend` — remove build deps (not needed for psycopg2-binary), use archive.debian.org mirrors properly or minimize apt usage.
+7. Edit `docker/Dockerfile.backend` — remove build deps (not needed for psycopg2-binary), use ECR mirror.
 8. Edit `docker/Dockerfile.web` — ensure ECR mirror is used.
 9. Validate builds.
 
@@ -48,6 +48,12 @@ Make the Django backend runnable by registering missing apps, fixing broken URL 
 - `apps/backend/.env` does not exist locally; create from `.env.example` for local runs.
 - Network/DNS issues on Windows may require troubleshooting (VPN off, DNS 8.8.8.8/1.1.1.1, mobile hotspot) as documented.
 - Running migrations / `docker compose up` deferred to implementation/test phase.
+
+## Build cache issue (IMPORTANT)
+If the user is seeing old Dockerfile content in build errors, they need to:
+1. Run `docker compose build --no-cache backend web` to force fresh build
+2. OR run `docker system prune -a` to clear all cached images
+3. Ensure they are in the correct project directory (the one with the updated Dockerfile)
 
 
 
